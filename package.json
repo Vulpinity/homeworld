@@ -4,7 +4,7 @@
   "description": "Defend your homeworld! A simple IO Game developed for the Global Game Jam 2019.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node ./watchbuild.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,9 @@
     "node-watch": "^0.6.0",
     "reconnecting-websocket": "^4.1.10",
     "shelljs": "^0.8.3",
-    "skid": "0.0.29"
+    "skid": "0.0.29",
+    "babel-runtime": "^6.26.0"
+  },
+  "devDependencies": {
   }
 }
