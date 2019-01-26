@@ -3,16 +3,19 @@ const socket = new ReconnectingWebSocket('ws://' + location.hostname + ':' + loc
 const saveDead = false
 let firstRun = true
 
-socket.addEventListener('open', function(event) {
+socket.addEventListener('open', (event) => {
     if (!firstRun && !saveDead) {
         location.reload()
     }
     firstRun = false
 })
 
-socket.addEventListener('message', function(event) {
-    console.log('Message from server ', event.data);
-})
+
+addHandler('load', (state) => {
+    socket.addEventListener('message', (event) => {
+        handle(state, 'message', event.data);
+    });
+});
 
 // For debugging.
 window.socket = socket
