@@ -2,7 +2,7 @@ const {addHandler, handle} = require('skid/lib/event');
 const {handleInterval} = require('skid/lib/timer');
 const {PieAvatar} = require('skid/lib/scene/pie-avatar');
 const {linear} = require('skid/lib/tween');
-
+const {PHYSICS_INTERVAL} = require('../constants');
 require('skid/lib/input');
 
 addHandler('load', (state) => {
@@ -16,7 +16,7 @@ addHandler('load_done', (state) => {
     updateShip(state, 4, false, 0, 0, -.51, 0, 3);
 
     handleInterval(state, 1000, 'ship_updateall');
-    handleInterval(state, 100, 'update_physics');
+    handleInterval(state, PHYSICS_INTERVAL, 'update_physics');
 });
 
 addHandler('key', (state, event) => {
@@ -33,7 +33,8 @@ addHandler('message', (state, data) => {
             var player = shipDetails[key].player;
             var positions = shipDetails[key].position;
             var team = shipDetails[key].team;
-            updateShip(state, player, player === state.playerId, positions.x, positions.y, positions.dx, positions.dy, team);
+            updateShip(state, player, player === state.playerId, positions.x, positions.y,
+                       positions.dx, positions.dy, team);
         });
     }
 });
@@ -61,7 +62,6 @@ function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
 
         const body = new PieAvatar(state.scene.camera);
         body.breadth.setTo(1);
-        ship.scene = body;
         body.x.setTo(x);
         body.y.setTo(y);
         body.w.setTo(1);
@@ -69,6 +69,7 @@ function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
 
         setShipColor(body, isPlayer, team);
 
+        ship.scene = body;
         ship.x = x;
         ship.y = y;
         ship.dx = dx;
