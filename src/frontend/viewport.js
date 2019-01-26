@@ -2,6 +2,7 @@ const {Viewport} = require('skid/lib/scene/viewport');
 const {Camera} = require('skid/lib/scene/camera');
 const {Smoothing} = require('skid/lib/scene/smoothing');
 const {addHandler} = require('skid/lib/event');
+const {ClearAll} = require('skid/lib/scene/clear-all');
 
 addHandler('load', (state) => {
     const canvas = document.createElement('canvas');
@@ -11,7 +12,10 @@ addHandler('load', (state) => {
     document.body.appendChild(canvas);
 
     const renderer = new Viewport(canvas);
-
+    
+    const clearAll = new ClearAll(renderer);
+    clearAll.layer = 1;
+    
     const hudCamera = new Camera(renderer);
     hudCamera.layer = 2;
     hudCamera.w.setTo(1);

@@ -30,6 +30,5 @@
     "skid": "0.0.29",
     "babel-runtime": "^6.26.0"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
