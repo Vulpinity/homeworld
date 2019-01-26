@@ -47,3 +47,14 @@ addHandler('connection', (state, socket) => {
 addHandler('disconnection', (state, socket) => {
     state.connections = state.connections.filter((val) => {return socket !== val})
 })
+
+addHandler('send', (state, data) => {
+    console.log('Send called.')
+    if (data.socket === undefined) {
+        for (let ws of state.connections) {
+            ws.send(JSON.stringify(data.msg))
+        }
+        return
+    }
+    data.socket.send(JSON.stringify(data.msg))
+})
