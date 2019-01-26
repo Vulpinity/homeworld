@@ -1,16 +1,18 @@
 const {addHandler} = require('skid/lib/event');
 const {handleInterval} = require('skid/lib/timer');
 const {RectAvatar} = require('skid/lib/scene/rect-avatar');
+const {linear} = require('skid/lib/tween');
 
 addHandler('load', (state) => {
     state.ships = {};
-    updateShip(state, 1, 0, 0, 0, 0, 'a');
+    updateShip(state, 1, 0, 0, .5, .5, 'a');
 
     handleInterval(state, 1000, 'ship_updateall');
 });
 
 addHandler('ship_updateall', (state) => {
-    for (const ship of state.ships) {
+    for (const ship of Object.values(state.ships)) {
+        ship.scene.x.modTo(5, 1000, linear);
         // TODO: ship.scene.x.modTo();
     }
 });

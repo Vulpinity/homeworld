@@ -7,10 +7,10 @@ addHandler('load', (state) => {
     const camera = new Camera(state.scene.renderer);
     camera.anchorX.setTo(.5);
     camera.anchorY.setTo(.5);
-    camera.layer = 1;
+    camera.layer = 2;
 
     const world = new Group(camera);
-    world.layer = 1;
+    world.layer = 2;
     const worldUI = new Group(camera);
     worldUI.layer = 3;
 

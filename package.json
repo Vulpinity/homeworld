@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Vulpiniy/homeworld#readme",
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "browserify": "^16.2.3",
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
@@ -28,8 +29,7 @@
     "reconnecting-websocket": "^4.1.10",
     "shelljs": "^0.8.3",
     "skid": "0.0.29",
-    "babel-runtime": "^6.26.0"
+    "uuid": "^3.3.2"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
