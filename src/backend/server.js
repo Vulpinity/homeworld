@@ -1,5 +1,7 @@
-const {start} = require('skid/lib/load');
+const {start} = require('skid/lib/load')
 require('./modules/network')
 require('./modules/players')
 require('./modules/input')
-start(false);
+require('./modules/ships')
+require('./modules/ticker')
+start(false)
