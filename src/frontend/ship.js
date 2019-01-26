@@ -1,4 +1,4 @@
-const {addHandler} = require('skid/lib/event');
+const {addHandler, handle} = require('skid/lib/event');
 const {handleInterval} = require('skid/lib/timer');
 const {PieAvatar} = require('skid/lib/scene/pie-avatar');
 const {linear} = require('skid/lib/tween');
@@ -7,17 +7,21 @@ require('skid/lib/input');
 
 addHandler('load', (state) => {
     state.ships = {};
+});
+
+addHandler('load_done', (state) => {
     updateShip(state, 1, false, 0, 0, .5, -.5, 1);
     updateShip(state, 2, false, 0, 0, .5, .5, 2);
     updateShip(state, 3, false, 0, 0, -.5, .5, 3);
+    updateShip(state, 4, false, 0, 0, -.51, 0, 3);
 
     handleInterval(state, 1000, 'ship_updateall');
-    handleInterval(state, 100, 'ship_updateposition');
+    handleInterval(state, 100, 'update_physics');
 });
 
 addHandler('key', (state, event) => {
-    
-})
+
+});
 
 addHandler('message', (state, data) => {
     var message = JSON.parse(data);
@@ -41,11 +45,12 @@ addHandler('ship_updateall', (state) => {
     }
 });
 
-addHandler('ship_updateposition', (state) => {
-    for (const ship of Object.values(state.ships)) {
-        //make ship.x and ship.y aggregate dx and dy values respectively
-
-    }
+addHandler('update_physics', (state) => {
+    // for (const ship of Object.values(state.ships)) {
+    //     //make ship.x and ship.y aggregate dx and dy values respectively
+    //
+    // }
+    // TODO: update only own ship
 });
 
 function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
@@ -63,16 +68,24 @@ function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
         body.h.setTo(1);
 
         setShipColor(body, isPlayer, team);
+
+        ship.x = x;
+        ship.y = y;
+        ship.dx = dx;
+        ship.dy = dy;
+
+        handle(state, 'ship_created', ship);
+    } else {
+        ship.x = x;
+        ship.y = y;
+        ship.dx = dx;
+        ship.dy = dy;
     }
-    ship.x = x;
-    ship.y = y;
-    ship.dx = dx;
-    ship.dy = dy;
 }
 
 function setShipColor(ship, isPlayer, team) {
     if (!isPlayer) {
-        switch(team){
+        switch(team) {
             case 1:
                 ship.fillStyle = 'red';
                 break;
@@ -85,5 +98,5 @@ function setShipColor(ship, isPlayer, team) {
         }
     } else {
         ship.fillStyle = 'green';
-    } 
+    }
 }
