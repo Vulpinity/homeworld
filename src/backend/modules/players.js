@@ -26,6 +26,7 @@ addHandler('load', (state) => {
 
 addHandler('connection', (state, socket) => {
     let player = {id: uuidv4(), team: nextTeam(state.players), socket}
+    state.players.push(player)
     handle(state, 'send', {
         socket: socket,
         msg: {type: 'assignment', player: {id: player.id, team: player.team}}})
@@ -33,7 +34,15 @@ addHandler('connection', (state, socket) => {
 })
 
 addHandler('disconnection', (state, socket) => {
+    let player
+    for (player of state.players) {
+        if (player.socket === socket ) {
+            break
+        }
+    }
+    state.players.splice(state.players.indexOf(player), 1)
     state.players = state.players.filter((player) => {return player.ws !== socket})
+    handle(state, 'playerleft', player)
 })
 
 addHandler('newship', (state, ship) => {

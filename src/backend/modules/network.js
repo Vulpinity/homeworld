@@ -49,7 +49,6 @@ addHandler('disconnection', (state, socket) => {
 })
 
 addHandler('send', (state, data) => {
-    console.log('Send called.')
     if (data.socket === undefined) {
         for (let ws of state.connections) {
             ws.send(JSON.stringify(data.msg))
