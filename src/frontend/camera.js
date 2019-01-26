@@ -1,6 +1,7 @@
 const {addHandler, handle} = require('skid/lib/event');
 const {Group} = require('skid/lib/scene/group');
 const {Camera} = require('skid/lib/scene/camera');
+const {canvasOf} = require('./viewport');
 
 addHandler('load', (state) => {
     const camera = new Camera(state.scene.renderer);
@@ -18,9 +19,9 @@ addHandler('load', (state) => {
     state.scene.worldUI = worldUI;
 });
 
-addHandler('load', (state) => {
-    // temporary initial state
-
-    state.scene.camera.w.setTo(10);
+addHandler('load resize', (state) => {
+    const canvas = canvasOf(state);
+    const aspect = canvas.width / canvas.height;
+    state.scene.camera.w.setTo(10 * aspect);
     state.scene.camera.h.setTo(10);
 });

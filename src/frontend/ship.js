@@ -11,7 +11,7 @@ addHandler('load', (state) => {
 
 addHandler('ship_updateall', (state) => {
     for (const ship of state.ships) {
-        ship.scene.x.modTo()
+        // TODO: ship.scene.x.modTo();
     }
 });
 
@@ -27,6 +27,8 @@ function updateShip(state, id, x, y, dx, dy, team) {
         rect.y.setTo(y);
         rect.w.setTo(1);
         rect.h.setTo(1);
+        rect.anchorX.setTo(.5);
+        rect.anchorY.setTo(.5);
         rect.fillStyle = 'red';
     }
     ship.x = x;
