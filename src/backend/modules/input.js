@@ -6,7 +6,7 @@ addHandler('input', (state, data) => {
     }
     try {
         data.msg = JSON.parse(data.msg)
-    } catch {
+    } catch (_) {
         console.log("ERR: Invalid JSON: ", data.msg)
         console.log('Type was: ' + typeof(data.msg))
         return
