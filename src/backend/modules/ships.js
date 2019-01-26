@@ -14,6 +14,7 @@ addHandler('playerstart', (state, player) => {
 })
 
 addHandler('tick', (state) => {
+    handle(state, 'positionevents', 'ships')
     handle(state,'send', {msg: {type: 'positionUpdate', ships: state.ships}})
 })
 
@@ -28,16 +29,26 @@ addHandler('input_position', (state, data) => {
     }
 })
 
+function pairsToObject (pairs) {
+    let obj = {}
+    for (let pair of pairs) {
+        obj[pair[0]] = pair[1]
+    }
+    return obj
+}
+
 
 addHandler('playerleft', (state, player) => {
-    let ships = {}
     let remaining = Object.entries(state.ships).filter((entry) => {
         return entry[1].player !== player.id
     })
     // Is there no inverse of Object.entries? Surely there's a quick way to turn an array of key,
     // value pairs into an object!
-    for (let ship of remaining) {
-        ships[ship[0]] = ship[1]
-    }
-    state.ships = ships
+    state.ships = pairsToObject(remaining)
+})
+
+
+addHandler('death', (state, ship) => {
+    state.ships.splice(state.ships.indexOf(ship, 1))
+    handle(state, 'send', {msg: {type: 'death', ship: ship.id}})
 })
