@@ -1,3 +1,4 @@
+const {addHandler, handle} = require('skid/lib/event');
 const ReconnectingWebSocket = require('reconnecting-websocket')
 const socket = new ReconnectingWebSocket('ws://' + location.hostname + ':' + location.port + '/io')
 const saveDead = false
