@@ -23,6 +23,10 @@
   "dependencies": {
     "browserify": "^16.2.3",
     "express": "^4.16.4",
+    "express-ws": "^4.0.0",
+    "node-watch": "^0.6.0",
+    "reconnecting-websocket": "^4.1.10",
+    "shelljs": "^0.8.3",
     "skid": "0.0.29"
   }
 }
