@@ -1,0 +1,26 @@
+{
+  "name": "homeworld",
+  "version": "1.0.0",
+  "description": "Defend your homeworld! A simple IO Game developed for the Global Game Jam 2019.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vulpiniy/homeworld.git"
+  },
+  "keywords": [
+    "game",
+    "iogame"
+  ],
+  "author": "Fox Piacenti, Nathan Everitt, Taylor Glenn, Corey Pon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vulpiniy/homeworld/issues"
+  },
+  "homepage": "https://github.com/Vulpiniy/homeworld#readme",
+  "dependencies": {
+    "skid": "0.0.29"
+  }
+}
