@@ -10,8 +10,6 @@ addHandler('positionevents', (state, collisionSet) => {
     // Separate the ships of the two teams.
     let teamSets = [1, 2].map((val) => {
             return Object.values(toCheck).filter((ship) => {
-                console.log(ship)
-                console.log(ship.team === val)
                 return ship.team === val
             })
         }
@@ -48,6 +46,7 @@ function runCollisions (state, connectedSets, opposingTeam) {
     for (let member of opposingTeam) {
         for (let connectedSet of connectedSets) {
             if (pointDistanceToSegment(connectedSet[0], connectedSet[1], member.position) <= .5) {
+                console.log('DEAD!')
                 handle(state, 'death', member)
             }
         }
