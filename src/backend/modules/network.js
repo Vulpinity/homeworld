@@ -1,4 +1,5 @@
 const {addHandler, handle} = require('skid/lib/event')
+const uuidv4 = require('uuid/v4');
 const express = require('express')
 const path = require('path')
 const expressWs = require('express-ws')
@@ -37,6 +38,15 @@ addHandler('load', (state) => {
 })
 
 addHandler('load_done', (state) => {
+    state.ships[uuidv4()] = (
+        {"team":1,"player":"661417c5-7e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":2,"dx":1,"dy":0}}
+    )
+    state.ships[uuidv4()] =(
+        {"team":1,"player":"661417c5-8e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":-2,"dx":1,"dy":0}}
+    )
+    state.ships[uuidv4()] =(
+        {"team":2,"player":"661417c5-9e3d-4e76-8fe8-47f176a966cc","position":{"x":0,"y":0,"dx":0,"dy":0}}
+    )
     state.expressApp.listen(port, () => console.log(`Defend your homeworld running on port ${port}!`))
 })
 
