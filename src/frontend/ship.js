@@ -45,8 +45,6 @@ addHandler('update_physics', (state) => {
     if (!state.localShip) {
         return
     }
-    state.localShip.dx = .25
-    state.localShip.dy = 0
     handle(state, 'send', {
         type: 'shipdirection', dx: state.localShip.dx, dy: state.localShip.dy, id: state.localShip.id
     })
@@ -54,6 +52,7 @@ addHandler('update_physics', (state) => {
 
 addHandler('ship_destroying', (state, id) => {
     const ship = state.ships[id];
+    if (!ship) return;
     delete state.ships[id];
     ship.scene.remove();
     if (state.localShip === ship) {
@@ -89,8 +88,10 @@ function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
     } else {
         ship.x = x;
         ship.y = y;
-        ship.dx = dx;
-        ship.dy = dy;
+        if (ship !== state.localShip) {
+            ship.dx = dx;
+            ship.dy = dy;
+        }
     }
 
     ship.scene.x.modTo(ship.x, PHYSICS_INTERVAL, linear);
@@ -101,13 +102,13 @@ function setShipColor(ship, isPlayer, team) {
     if (!isPlayer) {
         switch(team) {
             case 1:
-                ship.fillStyle = 'red';
+                ship.fillStyle = 'yellow';
                 break;
             case 2:
                 ship.fillStyle = 'blue';
                 break;
             case 3:
-                ship.fillStyle = 'yellow';
+                ship.fillStyle = 'gray';
                 break;
         }
     } else {

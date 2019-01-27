@@ -6,9 +6,9 @@ const {TIME_SPAWN} = require('../../constants');
 
 function teamPosition(team) {
     if (team === 1) {
-        return {x: 15, y: 0, dx: 0, dy: 0};
+        return {x: 14.5, y: 0, dx: 0, dy: 0};
     } else {
-        return {x: -15, y: 0, dx: 0, dy: 0};
+        return {x: -14.5, y: 0, dx: 0, dy: 0};
     }
 }
 

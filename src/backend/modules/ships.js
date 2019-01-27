@@ -38,7 +38,7 @@ addHandler('input_position', (state, data) => {
 })
 
 addHandler('updatephysics', (state) => {
-    for (let ship of Object.values(state.ships)) {
+    for (const ship of Object.values(state.ships)) {
         ship.position.x += (ship.position.dx * (PHYSICS_INTERVAL / 1000))
         ship.position.y += (ship.position.dy * (PHYSICS_INTERVAL / 1000))
     }
