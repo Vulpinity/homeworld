@@ -3,6 +3,7 @@ const {handleInterval} = require('skid/lib/timer');
 const {stateOf} = require('skid/lib/keyboard')
 const KEYS = require('skid/lib/key'); // Holds keyboard value constants.
 const {PieAvatar} = require('skid/lib/scene/pie-avatar');
+const {Translation} = require('skid/lib/scene/translation');
 const {linear} = require('skid/lib/tween');
 const {PHYSICS_INTERVAL, ACCELERATION_FACTOR, MAX_ACCELERATION, FRICTION_FACTOR} = require('../constants');
 require('skid/lib/input');
@@ -98,17 +99,28 @@ function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
         ship = {id, team};
         state.ships[id] = ship;
 
-        const body = new PieAvatar(state.scene.camera);
+        const group = new Translation(state.scene.camera);
+        group.layer = 1;
+        group.x.setTo(x);
+        group.y.setTo(y);
+
+        const body = new PieAvatar(group);
         body.layer = 1;
         body.breadth.setTo(1);
-        body.x.setTo(x);
-        body.y.setTo(y);
         body.w.setTo(1);
         body.h.setTo(1);
 
         setShipColor(body, isPlayer, team);
 
-        ship.scene = body;
+        const thingy = new PieAvatar(group);
+        thingy.layer = 2;
+        thingy.breadth.setTo(.999999); // NOTE: bug in Skid
+        thingy.innerRadiusRel.setTo(.7);
+        thingy.w.setTo(.6);
+        thingy.h.setTo(.6);
+        thingy.fillStyle = 'silver';
+
+        ship.scene = group;
         ship.x = x;
         ship.y = y;
         ship.dx = dx;
