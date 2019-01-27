@@ -7,6 +7,7 @@ require('./ship');
 require('./laser');
 require('./bounds');
 require('./destroy');
+require('./music');
 
 const {start} = require('skid/lib/load');
 start(true);
