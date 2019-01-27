@@ -10,11 +10,6 @@ addHandler('load', (state) => {
 });
 
 addHandler('load_done', (state) => {
-    updateShip(state, 1, false, 0, 0, .5, -.5, 1);
-    updateShip(state, 2, false, 0, 0, .5, .5, 2);
-    updateShip(state, 3, false, 0, 0, -.5, .5, 3);
-    updateShip(state, 4, false, 0, 0, -.51, 0, 3);
-
     handleInterval(state, 1000, 'ship_updateall');
     handleInterval(state, PHYSICS_INTERVAL, 'update_physics');
 });
@@ -29,18 +24,24 @@ addHandler('key', (state, event) => {
 });
 
 addHandler('message', (state, data) => {
-    var message = JSON.parse(data);
+    let message = JSON.parse(data);
     if (message["type"] === "assignment") {
         state.playerId = message["player"].id;
     } else if (message["type"] === "positionUpdate") {
-        var shipDetails = message["ships"];
+        let shipDetails = message["ships"];
         Object.keys(shipDetails).forEach(function (key) {
-            var player = shipDetails[key].player;
-            var positions = shipDetails[key].position;
-            var team = shipDetails[key].team;
-            updateShip(state, player, player === state.playerId, positions.x, positions.y,
-                       positions.dx, positions.dy, team);
+            let id = shipDetails[key].id
+            let player = shipDetails[key].player
+            let positions = shipDetails[key].position;
+            let team = shipDetails[key].team;
+            updateShip(state, id, player === state.playerId, positions.x, positions.y,
+                positions.dx, positions.dy, team)
         });
+    } else if (message["type"] === "death") {
+        let ship = state.ships[message['ship']]
+        delete state.ships[message['ship']]
+        ship.scene.remove()
+        console.log(state.ships)
     }
 });
 
@@ -52,10 +53,11 @@ addHandler('ship_updateall', (state) => {
 });
 
 addHandler('update_physics', (state) => {
-    // for (const ship of Object.values(state.ships)) {
-    //     //make ship.x and ship.y aggregate dx and dy values respectively
-    //
-    // }
+    for (const ship of Object.values(state.ships)) {
+        ship.x += (ship.dx * .1)
+        ship.y += (ship.dy * .1)
+        handle(state,'send', {type: 'position', position: {x: ship.x, y: ship.y, dx: ship.dx, dy: ship.dy}, id: ship.id})
+    }
     // TODO: update only own ship
 });
 

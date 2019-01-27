@@ -4,6 +4,7 @@ do
     kill "$(cat run.pid)" &> /dev/null
 done
 cd "$( dirname "${BASH_SOURCE[0]}" )"
+set -e
 ./node_modules/.bin/browserify ./src/frontend/index.js --outfile ./dist/index.js --debug
 cp ./src/frontend/index.html ./dist/index.html
 cp -r ./src/frontend/assets ./dist/

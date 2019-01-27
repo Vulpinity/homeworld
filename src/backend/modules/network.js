@@ -38,14 +38,13 @@ addHandler('load', (state) => {
 })
 
 addHandler('load_done', (state) => {
-    state.ships[uuidv4()] = (
-        {"team":1,"player":"661417c5-7e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":2,"dx":1,"dy":0}}
+    let id = uuidv4()
+    state.ships[id] = (
+        {"team":2,"player":"661417c5-7e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":2,"dx":1,"dy":0}, "id": id}
     )
-    state.ships[uuidv4()] =(
-        {"team":1,"player":"661417c5-8e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":-2,"dx":1,"dy":0}}
-    )
-    state.ships[uuidv4()] =(
-        {"team":2,"player":"661417c5-9e3d-4e76-8fe8-47f176a966cc","position":{"x":0,"y":0,"dx":0,"dy":0}}
+    id = uuidv4()
+    state.ships[id] =(
+        {"team":2,"player":"661417c5-8e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":-2,"dx":1,"dy":0}, "id": id}
     )
     state.expressApp.listen(port, () => console.log(`Defend your homeworld running on port ${port}!`))
 })
@@ -61,9 +60,18 @@ addHandler('disconnection', (state, socket) => {
 addHandler('send', (state, data) => {
     if (data.socket === undefined) {
         for (let ws of state.connections) {
-            ws.send(JSON.stringify(data.msg))
+            try {
+                ws.send(JSON.stringify(data.msg))
+            } catch {
+                // Socket is closing. Ignore.
+            }
         }
         return
     }
-    data.socket.send(JSON.stringify(data.msg))
+    try {
+        data.socket.send(JSON.stringify(data.msg))
+    } catch (err) {
+        console.log(err)
+        // Socket is closing. Ignore.
+    }
 })

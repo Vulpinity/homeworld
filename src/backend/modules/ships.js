@@ -8,8 +8,9 @@ addHandler('load', (state) => {
 })
 
 addHandler('playerstart', (state, player) => {
-    let ship = {team: player.team, player: player.id}
-    state.ships[uuidv4()] = ship
+    let id = uuidv4()
+    let ship = {team: player.team, player: player.id, id: id}
+    state.ships[id] = ship
     handle(state, 'newship', ship)
 })
 
@@ -22,6 +23,12 @@ addHandler('input_position', (state, data) => {
     // This input is taken directly from the client. It is not validated. Normally, this would be insane, but this is a
     // 'develop a game in 48 hours challenge' and we'll only play it a few times, likely.
     try {
+        if (state.ships[data.msg['id']] === undefined) {
+            if (state.debug) {
+                console.log(`Got position for non-existant ship, '${data.msg.id}'`)
+            }
+            return
+        }
         state.ships[data.msg['id']].position = data.msg['position']
     } catch (err) {
         console.log("Couldn't update position!")
@@ -49,6 +56,9 @@ addHandler('playerleft', (state, player) => {
 
 
 addHandler('death', (state, ship) => {
-    state.ships.splice(state.ships.indexOf(ship, 1))
+    let remaining = Object.entries(state.ships).filter((entry) => {
+        return entry[0] !== ship.id
+    })
+    state.ships = pairsToObject(remaining)
     handle(state, 'send', {msg: {type: 'death', ship: ship.id}})
 })

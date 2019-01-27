@@ -15,3 +15,12 @@ addHandler('load', (state) => {
         handle(state, 'connect');
     });
 });
+
+addHandler('send', (state, message) => {
+    try {
+        state.socket.send(JSON.stringify(message))
+    } catch (err) {
+        // Likely that the socket is closing. Ignore.
+        console.error(err)
+    }
+})

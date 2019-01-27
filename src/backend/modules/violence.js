@@ -1,6 +1,6 @@
 // This contains a bunch of math to determine if ships will explode.
 const {addHandler, handle} = require('skid/lib/event')
-const {MAX_LEN_LASER} = require('../../constants')
+const {MAX_LEN_LASER, MIN_LEN_LASER} = require('../../constants')
 
 addHandler('positionevents', (state, collisionSet) => {
     if (!(collisionSet === 'ships')) {
@@ -18,9 +18,9 @@ addHandler('positionevents', (state, collisionSet) => {
     // Get all of the possible pairs from each team.
     let pairSets = teamSets.map((team) => {
         let pairs = []
-        for (let i=0; i++; i < team1.length - 1) {
-            for (let j=i + 1; j++; i < team1.length) {
-                pairs.push([i.position, j.position])
+        for (let i=0; i < team.length - 1; i++) {
+            for (let j=i + 1; j < team.length; j++ ) {
+                pairs.push([team[i].position, team[j].position])
             }
         }
         return pairs
@@ -30,7 +30,8 @@ addHandler('positionevents', (state, collisionSet) => {
         return pairSet.filter((pair) => {
             let a = pair[0]
             let b = pair[1]
-            return pointDistance(a, b) < MAX_LEN_LASER
+            let distance = pointDistance(a, b)
+            return (MIN_LEN_LASER < distance) && (distance <= MAX_LEN_LASER)
         })
     })
     // Lop off the ends of the lasers so that there's a grace area users can pass over.
@@ -47,7 +48,6 @@ function runCollisions (state, connectedSets, opposingTeam) {
     for (let member of opposingTeam) {
         for (let connectedSet of connectedSets) {
             if (pointDistanceToSegment(connectedSet[0], connectedSet[1], member.position) <= .5) {
-                console.log('DEAD!')
                 handle(state, 'death', member)
             }
         }
