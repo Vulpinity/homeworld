@@ -6,7 +6,7 @@ const {canvasOf} = require('./viewport')
 addHandler('load', (state) => {
     state.scoreAvatar = new TextAvatar(state.scene.hudCamera, state.scene.hudCamera)
     state.scoreAvatar.fillStyle = 'white'
-    state.scoreAvatar.x.setTo(-.5)
+    state.scoreAvatar.x.setTo(0)
     state.scoreAvatar.y.setTo(0)
     state.scoreAvatar.font = '1em sans'
     state.scoreAvatar.textAlign = 'left'
