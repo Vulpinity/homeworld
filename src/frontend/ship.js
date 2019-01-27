@@ -144,7 +144,7 @@ function setShipColor(ship, isPlayer, team) {
     } else {
         switch(team) {
             case 1:
-                ship.fillStyle = 'lightyellow';
+                ship.fillStyle = '#ff8';
                 break;
             case 2:
                 ship.fillStyle = 'lightblue';

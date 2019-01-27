@@ -8,6 +8,7 @@ require('./laser');
 require('./bounds');
 require('./destroy');
 require('./music');
+require('./homeworld');
 
 const {start} = require('skid/lib/load');
 start(true);

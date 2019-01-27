@@ -38,14 +38,16 @@ addHandler('load', (state) => {
 })
 
 addHandler('load_done', (state) => {
-    let id = uuidv4()
-    state.ships[id] = (
-        {"team":2,"player":"661417c5-7e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":2,"dx":1,"dy":0}, "id": id}
-    )
-    id = uuidv4()
-    state.ships[id] =(
-        {"team":2,"player":"661417c5-8e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":-2,"dx":1,"dy":0}, "id": id}
-    )
+    // Uncomment this for debug "AI" ships
+    // let id = uuidv4()
+    // state.ships[id] = (
+    //     {"team":2,"player":"661417c5-7e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":2,"dx":1,"dy":0}, "id": id}
+    // )
+    // id = uuidv4()
+    // state.ships[id] =(
+    //     {"team":2,"player":"661417c5-8e3d-4e76-8fe8-47f176a966cc","position":{"x":-5,"y":-2,"dx":1,"dy":0}, "id": id}
+    // )
+
     state.expressApp.listen(port, () => console.log(`Defend your homeworld running on port ${port}!`))
 })
 
