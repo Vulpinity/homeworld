@@ -142,6 +142,15 @@ function setShipColor(ship, isPlayer, team) {
                 break;
         }
     } else {
-        ship.fillStyle = 'green';
+        switch(team) {
+            case 1:
+                ship.fillStyle = 'lightyellow';
+                break;
+            case 2:
+                ship.fillStyle = 'lightblue';
+                break;
+            default:
+                ship.fillStyle = 'green';
+        }
     }
 }
