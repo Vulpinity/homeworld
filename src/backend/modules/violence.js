@@ -47,12 +47,7 @@ function runCollisions (state, connectedSets, opposingTeam) {
     // Checks to see if anyone blew up, and sends a death event, if so.
     for (let member of opposingTeam) {
         for (let connectedSet of connectedSets) {
-            console.log(pointDistanceToSegment(connectedSet[0], connectedSet[1], member.position))
             if (pointDistanceToSegment(connectedSet[0], connectedSet[1], member.position) <= .5) {
-                console.log(connectedSet[0])
-                console.log(connectedSet[1])
-                console.log(member.position)
-                console.log('DEATH!')
                 handle(state, 'death', member)
             }
         }
@@ -64,10 +59,7 @@ function pointDistance(a, b) {
     return Math.abs(Math.sqrt(((a.x - b.x) ** 2) + ((a.y - b.y) ** 2)))
 }
 
-// So, (x1,y1) -> (x1 + 1.5(x2-x1)/r, y1 + 1.5(y2-y1)/r) where r is the length of the line
-//
-// To transform (x2,y2), just swap the two sets of coordinates
-
+// Thanks to KathTheDragon for this algorithm.
 function shrinkEnd(p1, p2, length, reduction) {
     return {x: p1.x + (reduction * (p2.x-p1.x)/length), y: p1.y + (reduction * (p2.y - p1.y) / length)}
 }
