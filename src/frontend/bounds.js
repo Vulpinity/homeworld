@@ -21,7 +21,9 @@ addHandler('update_physics', (state) => {
 
         const dist = distanceXY(0, 0, ship.x, ship.y);
 
-        if (dist > BOUNDS_RADIUS - .5) {
+        // NOTE: Should actually be - .5 but numerical stability below temporarily requires this
+        // ship can get snagged on the edge of the boundary somehow
+        if (dist > BOUNDS_RADIUS + .5) {
 
             // normalized vector towards center
             let headingX = -ship.x / dist;
