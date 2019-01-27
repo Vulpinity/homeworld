@@ -2,11 +2,15 @@ const {addHandler, handle} = require('skid/lib/event');
 const {handleInterval} = require('skid/lib/timer');
 const {linear} = require('skid/lib/tween');
 const {distanceXY} = require('skid/lib/vector2');
+const {loadAudio} = require('skid/lib/audio');
 const {LineAvatar} = require('./line-avatar');
 const {PHYSICS_INTERVAL, MAX_LEN_LASER} = require('../constants');
 
 addHandler('load', (state) => {
     state.lasers = {};
+
+    loadAudio(state, 'laser_off', {src: ['./assets/laser_off_0.ogg', './assets/laser_off_0.mp3']});
+    loadAudio(state, 'laser_on', {src: ['./assets/laser_on_0.ogg', './assets/laser_on_0.mp3']});
 });
 
 addHandler('ship_created', (state, ship) => {

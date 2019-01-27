@@ -30,17 +30,25 @@ addHandler('message', (state, data) => {
             let positions = shipDetails[key].position;
             let team = shipDetails[key].team;
             updateShip(state, id, player === state.playerId, positions.x, positions.y,
-                positions.dx, positions.dy, team)
+                       positions.dx, positions.dy, team);
 
             if (player === state.playerId) {
                 state.localShip = state.ships[id];
             }
         });
     } else if (message["type"] === "death") {
-        let ship = state.ships[message['ship']]
-        delete state.ships[message['ship']]
-        ship.scene.remove()
+        handle(state, 'ship_destroying', message['ship']);
     }
+});
+
+addHandler('ship_destroying', (state, id) => {
+    const ship = state.ships[id];
+    delete state.ships[id];
+    ship.scene.remove();
+    if (state.localShip === ship) {
+        state.localShip = undefined;
+    }
+    handle(state, 'ship_destroyed', ship);
 });
 
 addHandler('ship_updateall', (state) => {
