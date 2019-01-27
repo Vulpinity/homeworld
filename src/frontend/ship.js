@@ -1,8 +1,10 @@
 const {addHandler, handle} = require('skid/lib/event');
 const {handleInterval} = require('skid/lib/timer');
+const {stateOf} = require('skid/lib/keyboard')
+const KEYS = require('skid/lib/key'); // Holds keyboard value constants.
 const {PieAvatar} = require('skid/lib/scene/pie-avatar');
 const {linear} = require('skid/lib/tween');
-const {PHYSICS_INTERVAL} = require('../constants');
+const {PHYSICS_INTERVAL, ACCELERATION_FACTOR, MAX_ACCELERATION, FRICTION_FACTOR} = require('../constants');
 require('skid/lib/input');
 
 addHandler('load', (state) => {
@@ -14,9 +16,6 @@ addHandler('load_done', (state) => {
     handleInterval(state, PHYSICS_INTERVAL, 'update_physics')
 });
 
-addHandler('key', (state, event) => {
-
-});
 
 addHandler('message', (state, data) => {
     let message = JSON.parse(data);
@@ -41,12 +40,41 @@ addHandler('message', (state, data) => {
     }
 });
 
+const TRANSLATIONS = {
+}
+
+TRANSLATIONS[KEYS.W] = KEYS.UP
+TRANSLATIONS[KEYS.S] = KEYS.DOWN
+TRANSLATIONS[KEYS.A] = KEYS.LEFT
+TRANSLATIONS[KEYS.D] = KEYS.RIGHT
+
+const MOVE_MAPPINGS = [
+    [KEYS.UP, {dx: 0, dy: -ACCELERATION_FACTOR}],
+    [KEYS.DOWN, {dx: 0, dy: ACCELERATION_FACTOR}],
+    [KEYS.LEFT, {dx: -ACCELERATION_FACTOR, dy: 0}],
+    [KEYS.RIGHT, {dx: ACCELERATION_FACTOR, dy: 0}]
+]
+
 addHandler('update_physics', (state) => {
     if (!state.localShip) {
         return
     }
-    state.localShip.dx = .25
-    state.localShip.dy = 0
+    // state.localShip.dx *=  1 - (FRICTION_FACTOR * (PHYSICS_INTERVAL / 1000))
+    // state.localShip.dy *=  1 - (FRICTION_FACTOR * (PHYSICS_INTERVAL / 1000))
+    for (let mapping of MOVE_MAPPINGS) {
+        let key = mapping[0]
+        let vector = mapping[1]
+        if (stateOf(key)) {
+            state.localShip.dx += (vector.dx * (PHYSICS_INTERVAL / 1000))
+            if (state.localShip.dx > MAX_ACCELERATION) {
+                state.localShip.dx = MAX_ACCELERATION
+            }
+            state.localShip.dy += (vector.dy * (PHYSICS_INTERVAL / 1000))
+            if (state.localShip.dy > MAX_ACCELERATION) {
+                state.localShip.dy = MAX_ACCELERATION
+            }
+        }
+    }
     handle(state, 'send', {
         type: 'shipdirection', dx: state.localShip.dx, dy: state.localShip.dy, id: state.localShip.id
     })
