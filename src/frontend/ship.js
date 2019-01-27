@@ -19,6 +19,11 @@ addHandler('load_done', (state) => {
     handleInterval(state, PHYSICS_INTERVAL, 'update_physics');
 });
 
+function localShip(state) {
+    return state.ships[state.playerId];
+}
+exports.localShip = localShip;
+
 addHandler('key', (state, event) => {
 
 });

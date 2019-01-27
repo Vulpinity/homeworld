@@ -14,9 +14,9 @@ function nextTeam (players) {
 
 function teamPosition (team) {
     if (team === 1) {
-        return {x: 0, y: 0, dx: 0, dy: 0}
+        return {x: 4, y: 0, dx: 0, dy: 0}
     } else {
-        return {x: 10, y: 0, dx: 0, dy: 0}
+        return {x: -4, y: 0, dx: 0, dy: 0}
     }
 }
 
