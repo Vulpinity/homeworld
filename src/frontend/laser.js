@@ -47,6 +47,7 @@ const COLOR_LASERTHINGY = 'rgba(200, 0, 0, .5)';
 
 addHandler('update_laserstuff', (state) => {
     for (const laser of Object.values(state.lasers)) {
+        if (!laser.on) continue;
         makeThingy(state, laser.scene.x1.curr, laser.scene.y1.curr, COLOR_LASERTHINGY);
         makeThingy(state, laser.scene.x2.curr, laser.scene.y2.curr, COLOR_LASERTHINGY);
     }
