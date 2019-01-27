@@ -11,6 +11,7 @@ addHandler('load', (state) => {
 
 addHandler('load_done', (state) => {
     handleInterval(state, 1000, 'ship_updateall');
+    handleInterval(state, PHYSICS_INTERVAL, 'updatedirection')
 });
 
 addHandler('key', (state, event) => {
@@ -39,6 +40,17 @@ addHandler('message', (state, data) => {
         handle(state, 'ship_destroying', message['ship']);
     }
 });
+
+addHandler('updatedirection', (state) => {
+    if (!state.localShip) {
+        return
+    }
+    state.localShip.dx = .25
+    state.localShip.dy = 0
+    handle(state, 'send', {
+        type: 'shipdirection', dx: state.localShip.dx, dy: state.localShip.dy, id: state.localShip.id
+    })
+})
 
 addHandler('ship_destroying', (state, id) => {
     const ship = state.ships[id];

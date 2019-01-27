@@ -47,6 +47,7 @@ function runCollisions (state, connectedSets, opposingTeam) {
     // Checks to see if anyone blew up, and sends a death event, if so.
     for (let member of opposingTeam) {
         for (let connectedSet of connectedSets) {
+            console.log(pointDistanceToSegment(connectedSet[0], connectedSet[1], member.position))
             if (pointDistanceToSegment(connectedSet[0], connectedSet[1], member.position) <= .5) {
                 console.log(connectedSet[0])
                 console.log(connectedSet[1])

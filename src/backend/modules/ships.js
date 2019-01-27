@@ -45,19 +45,17 @@ addHandler('updatephysics', (state) => {
     }
 });
 
-addHandler('input_positions', (state, data) => {
+addHandler('input_shipdirection', (state, data) => {
     // This input is taken directly from the client. It is not validated. Normally, this would be insane, but this is a
     // 'develop a game in 48 hours challenge' and we'll only play it a few times, likely.
     try {
-        for (let entry of Object.entries(data.msg.positions)) {
-            let ship = state.ships[entry[0]]
-            if (ship === undefined) {
-                return
-            }
-            let update = entry[1]
-            ship.dx = update.dx
-            ship.dy = update.dy
+        if (!state.ships[data.msg.id]) {
+            // Ship has been eliminated.
+            return
         }
+        let ship = state.ships[data.msg.id]
+        ship.position.dx = data.msg.dx
+        ship.position.dy = data.msg.dy
     } catch (err) {
         console.log("Couldn't update position!")
         console.error(err)
