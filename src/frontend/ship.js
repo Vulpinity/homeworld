@@ -51,12 +51,12 @@ addHandler('ship_destroying', (state, id) => {
     handle(state, 'ship_destroyed', ship);
 });
 
-addHandler('ship_updateall', (state) => {
-    for (const ship of Object.values(state.ships)) {
-        ship.scene.x.mod(ship.dx, 1000, linear);
-        ship.scene.y.mod(ship.dy, 1000, linear);
-    }
-});
+// addHandler('ship_updateall', (state) => {
+//     for (const ship of Object.values(state.ships)) {
+//         ship.scene.x.mod(ship.dx, 1000, linear);
+//         ship.scene.y.mod(ship.dy, 1000, linear);
+//     }
+// });
 
 addHandler('update_physics', (state) => {
     for (const ship of Object.values(state.ships)) {
@@ -96,6 +96,9 @@ function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
         ship.dx = dx;
         ship.dy = dy;
     }
+
+    ship.scene.x.modTo(ship.x, PHYSICS_INTERVAL, linear);
+    ship.scene.y.modTo(ship.y, PHYSICS_INTERVAL, linear);
 }
 
 function setShipColor(ship, isPlayer, team) {
