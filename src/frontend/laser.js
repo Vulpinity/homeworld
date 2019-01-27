@@ -30,7 +30,7 @@ addHandler('ship_destroyed', (state, ship) => {
             delete state.lasers[key];
         }
     }
-})
+});
 
 function updateLaser(state, shipA, shipB) {
     const id = `${shipA.id}_${shipB.id}`;

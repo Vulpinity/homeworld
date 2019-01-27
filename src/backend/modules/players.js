@@ -12,14 +12,6 @@ function nextTeam (players) {
     }
 }
 
-function teamPosition (team) {
-    if (team === 1) {
-        return {x: 4, y: 0, dx: 0, dy: 0}
-    } else {
-        return {x: -4, y: 0, dx: 0, dy: 0}
-    }
-}
-
 addHandler('load', (state) => {
     state.players = []
 })
@@ -45,6 +37,9 @@ addHandler('disconnection', (state, socket) => {
     handle(state, 'playerleft', player)
 })
 
-addHandler('newship', (state, ship) => {
-    ship.position = teamPosition(ship.team)
-})
+function playerOfId(state, id) {
+    for (const player of state.players) {
+        if (player.id === id) return player;
+    }
+}
+exports.playerOfId = playerOfId;

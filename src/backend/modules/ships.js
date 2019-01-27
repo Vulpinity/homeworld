@@ -1,18 +1,17 @@
-
 const uuidv4 = require('uuid/v4');
-
 const {addHandler, handle} = require('skid/lib/event')
 
 addHandler('load', (state) => {
     state.ships = {}
 })
 
-addHandler('playerstart', (state, player) => {
+function makeShip(state, player) {
     let id = uuidv4()
-    let ship = {team: player.team, player: player.id, id: id}
+    let ship = {team: player.team, player: player.id, id}
     state.ships[id] = ship
     handle(state, 'newship', ship)
-})
+}
+exports.makeShip = makeShip
 
 addHandler('tick', (state) => {
     handle(state, 'positionevents', 'ships')
