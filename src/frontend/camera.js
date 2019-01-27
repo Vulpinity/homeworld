@@ -22,6 +22,6 @@ addHandler('load', (state) => {
 addHandler('load resize', (state) => {
     const canvas = canvasOf(state);
     const aspect = canvas.width / canvas.height;
-    state.scene.camera.w.setTo(10 * aspect);
-    state.scene.camera.h.setTo(10);
+    state.scene.camera.w.setTo(20 * aspect);
+    state.scene.camera.h.setTo(20);
 });

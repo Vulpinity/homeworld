@@ -1,8 +1,9 @@
 const {addHandler} = require('skid/lib/event');
 const {handleInterval} = require('skid/lib/timer');
 const {linear} = require('skid/lib/tween');
+const {distanceXY} = require('skid/lib/vector2');
 const {LineAvatar} = require('./line-avatar');
-const {PHYSICS_INTERVAL} = require('../constants');
+const {PHYSICS_INTERVAL, MAX_LEN_LASER} = require('../constants');
 
 addHandler('load', (state) => {
     state.lasers = {};
@@ -27,16 +28,32 @@ function updateLaser(state, shipA, shipB) {
         state.lasers[id] = laser;
 
         laser.scene = new LineAvatar(state.scene.world);
-        laser.scene.strokeStyle = 'red';
         laser.scene.lineWidth = .1;
         laser.shipA = shipA;
         laser.shipB = shipB;
     }
 
-    const x1 = laser.shipA.scene.x.curr;
-    const y1 = laser.shipA.scene.y.curr;
-    const x2 = laser.shipB.scene.x.curr;
-    const y2 = laser.shipB.scene.y.curr;
+    let x1 = laser.shipA.scene.x.curr;
+    let y1 = laser.shipA.scene.y.curr;
+    let x2 = laser.shipB.scene.x.curr;
+    let y2 = laser.shipB.scene.y.curr;
+
+    const dist = distanceXY(x1, y1, x2, y2);
+    if (3 <= dist && dist <= MAX_LEN_LASER) {
+        if (laser.scene.strokeStyle !== 'red') {
+            created = true;
+        }
+        laser.scene.strokeStyle = 'red';
+    } else {
+        laser.scene.strokeStyle = 'transparent';
+        return;
+    }
+
+    const [a, b] = shrinkSegment({x: x1, y: y1}, {x: x2, y: y2}, 3);
+    x1 = a.x;
+    y1 = a.y;
+    x2 = b.x;
+    y2 = b.y;
 
     if (created) {
         laser.scene.x1.setTo(x1);
@@ -49,7 +66,6 @@ function updateLaser(state, shipA, shipB) {
         laser.scene.x2.modTo(x2, PHYSICS_INTERVAL, linear);
         laser.scene.y2.modTo(y2, PHYSICS_INTERVAL, linear);
     }
-
 }
 
 addHandler('update_physics', (state) => {
@@ -57,3 +73,22 @@ addHandler('update_physics', (state) => {
         updateLaser(state, laser.shipA, laser.shipB);
     }
 });
+
+
+// NOTE: copied from backend vvv
+
+function pointDistance(a, b) {
+    // get the distance between two points.
+    return Math.abs(Math.sqrt(((a.x - b.x) ** 2) + ((a.y - b.y) ** 2)))
+}
+
+function shrinkEnd(p1, p2, length, reduction) {
+    return {x: p1.x + (reduction * (p2.x-p1.x)/length), y: p1.y + (reduction * (p2.y - p1.y) / length)}
+}
+
+function shrinkSegment(p1, p2, reduction) {
+    let length = pointDistance(p1, p2)
+    let p1b = shrinkEnd(p1, p2, length, reduction / 2)
+    let p2b = shrinkEnd(p2, p1, length, reduction / 2)
+    return [p1b, p2b]
+}

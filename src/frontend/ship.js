@@ -57,7 +57,7 @@ addHandler('update_physics', (state) => {
 function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
     let ship = state.ships[id];
     if (!ship) {
-        ship = {id};
+        ship = {id, team};
         state.ships[id] = ship;
 
         const body = new PieAvatar(state.scene.camera);
