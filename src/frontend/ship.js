@@ -11,7 +11,6 @@ addHandler('load', (state) => {
 
 addHandler('load_done', (state) => {
     handleInterval(state, 1000, 'ship_updateall');
-    handleInterval(state, PHYSICS_INTERVAL, 'update_physics');
 });
 
 addHandler('key', (state, event) => {
@@ -51,21 +50,6 @@ addHandler('ship_destroying', (state, id) => {
     handle(state, 'ship_destroyed', ship);
 });
 
-// addHandler('ship_updateall', (state) => {
-//     for (const ship of Object.values(state.ships)) {
-//         ship.scene.x.mod(ship.dx, 1000, linear);
-//         ship.scene.y.mod(ship.dy, 1000, linear);
-//     }
-// });
-
-addHandler('update_physics', (state) => {
-    for (const ship of Object.values(state.ships)) {
-        ship.x += (ship.dx * .1)
-        ship.y += (ship.dy * .1)
-        handle(state,'send', {type: 'position', position: {x: ship.x, y: ship.y, dx: ship.dx, dy: ship.dy}, id: ship.id})
-    }
-    // TODO: update only own ship
-});
 
 function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
     let ship = state.ships[id];

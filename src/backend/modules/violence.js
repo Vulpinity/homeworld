@@ -48,6 +48,10 @@ function runCollisions (state, connectedSets, opposingTeam) {
     for (let member of opposingTeam) {
         for (let connectedSet of connectedSets) {
             if (pointDistanceToSegment(connectedSet[0], connectedSet[1], member.position) <= .5) {
+                console.log(connectedSet[0])
+                console.log(connectedSet[1])
+                console.log(member.position)
+                console.log('DEATH!')
                 handle(state, 'death', member)
             }
         }

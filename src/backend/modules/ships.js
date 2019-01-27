@@ -1,3 +1,4 @@
+const {PHYSICS_INTERVAL} = require('../../constants')
 
 const uuidv4 = require('uuid/v4');
 
@@ -15,6 +16,7 @@ addHandler('playerstart', (state, player) => {
 })
 
 addHandler('tick', (state) => {
+    handle(state, 'updatephysics', 'ships')
     handle(state, 'positionevents', 'ships')
     handle(state,'send', {msg: {type: 'positionUpdate', ships: state.ships}})
 })
@@ -30,6 +32,32 @@ addHandler('input_position', (state, data) => {
             return
         }
         state.ships[data.msg['id']].position = data.msg['position']
+    } catch (err) {
+        console.log("Couldn't update position!")
+        console.error(err)
+    }
+})
+
+addHandler('updatephysics', (state) => {
+    for (let ship of Object.values(state.ships)) {
+        ship.position.x += (ship.position.dx * (PHYSICS_INTERVAL / 1000))
+        ship.position.y += (ship.position.dy * (PHYSICS_INTERVAL / 1000))
+    }
+});
+
+addHandler('input_positions', (state, data) => {
+    // This input is taken directly from the client. It is not validated. Normally, this would be insane, but this is a
+    // 'develop a game in 48 hours challenge' and we'll only play it a few times, likely.
+    try {
+        for (let entry of Object.entries(data.msg.positions)) {
+            let ship = state.ships[entry[0]]
+            if (ship === undefined) {
+                return
+            }
+            let update = entry[1]
+            ship.dx = update.dx
+            ship.dy = update.dy
+        }
     } catch (err) {
         console.log("Couldn't update position!")
         console.error(err)
