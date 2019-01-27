@@ -13,16 +13,16 @@ addHandler('load', (state) => {
     loadAudio(state, 'laser_off', {src: ['./assets/laser_off_0.ogg', './assets/laser_off_0.mp3']});
     loadAudio(state, 'laser_on', {src: ['./assets/laser_on_0.ogg', './assets/laser_on_0.mp3']});
 
-    handleInterval(state, 300, 'update_laserstuff');
+    handleInterval(state, 400, 'update_laserstuff');
 });
 
-const TIME_THINGY = 900;
+const TIME_THINGY = 1200;
 
-function makeThingy(state, x, y) {
+function makeThingy(state, x, y, color) {
     const thingy = new RectAvatar(state.scene.world);
-    thingy.layer = 2;
+    thingy.layer = 1;
 
-    thingy.fillStyle = 'rgba(200, 0, 0, .5)';
+    thingy.fillStyle = color;
     thingy.w.setTo(.65);
     thingy.h.setTo(.65);
     thingy.anchorX.setTo(.5);
@@ -42,12 +42,16 @@ function makeThingy(state, x, y) {
     setTimeout(() => thingy.remove(), TIME_THINGY);
 }
 
+const COLOR_EXHAUST = 'rgba(200, 200, 200, .5)';
+const COLOR_LASERTHINGY = 'rgba(200, 0, 0, .5)';
+
 addHandler('update_laserstuff', (state) => {
     for (const laser of Object.values(state.lasers)) {
-        makeThingy(state, laser.shipA.x, laser.shipA.y);
-        makeThingy(state, laser.shipB.x, laser.shipB.y);
-        makeThingy(state, laser.scene.x1.curr, laser.scene.y1.curr);
-        makeThingy(state, laser.scene.x2.curr, laser.scene.y2.curr);
+        makeThingy(state, laser.scene.x1.curr, laser.scene.y1.curr, COLOR_LASERTHINGY);
+        makeThingy(state, laser.scene.x2.curr, laser.scene.y2.curr, COLOR_LASERTHINGY);
+    }
+    for (const ship of Object.values(state.ships)) {
+        makeThingy(state, ship.x, ship.y, COLOR_EXHAUST);
     }
 });
 
@@ -76,7 +80,7 @@ function updateLaser(state, shipA, shipB) {
     let laser = state.lasers[id];
     if (!laser) {
         created = true;
-        laser = {id};
+        laser = {id, on: false};
         state.lasers[id] = laser;
 
         laser.scene = new LineAvatar(state.scene.world);
@@ -93,13 +97,20 @@ function updateLaser(state, shipA, shipB) {
 
     const dist = distanceXY(x1, y1, x2, y2);
     if (3 <= dist && dist <= MAX_LEN_LASER) {
-        if (laser.scene.strokeStyle !== 'red') {
+        if (!laser.on) {
             created = true;
+            laser.on = true;
             handle(state, 'laser_on');
         }
-        laser.scene.strokeStyle = 'red';
+
+        if (laser.shipA.team === 1) {
+            laser.scene.strokeStyle = 'red';
+        } else {
+            laser.scene.strokeStyle = 'cyan';
+        }
     } else {
-        if (laser.scene.strokeStyle === 'red') {
+        if (laser.on) {
+            laser.on = false;
             handle(state, 'laser_off');
         }
         laser.scene.strokeStyle = 'transparent';

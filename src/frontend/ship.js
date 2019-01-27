@@ -99,8 +99,8 @@ function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
         ship = {id, team};
         state.ships[id] = ship;
 
-        const group = new Translation(state.scene.camera);
-        group.layer = 1;
+        const group = new Translation(state.scene.world);
+        group.layer = 2;
         group.x.setTo(x);
         group.y.setTo(y);
 
