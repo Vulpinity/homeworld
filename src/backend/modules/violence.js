@@ -20,7 +20,7 @@ addHandler('positionevents', (state, collisionSet) => {
         let pairs = []
         for (let i=0; i < team.length - 1; i++) {
             for (let j=i + 1; j < team.length; j++ ) {
-                pairs.push([team[i].position, team[j].position])
+                pairs.push([team[i], team[j]])
             }
         }
         return pairs
@@ -28,8 +28,8 @@ addHandler('positionevents', (state, collisionSet) => {
     // Filter out any pairs that aren't close together enough.
     let connectedSets = pairSets.map((pairSet) => {
         return pairSet.filter((pair) => {
-            let a = pair[0]
-            let b = pair[1]
+            let a = pair[0].position
+            let b = pair[1].position
             let distance = pointDistance(a, b)
             return (MIN_LEN_LASER < distance) && (distance <= MAX_LEN_LASER)
         })
@@ -47,8 +47,8 @@ function runCollisions (state, connectedSets, opposingTeam) {
     // Checks to see if anyone blew up, and sends a death event, if so.
     for (let member of opposingTeam) {
         for (let connectedSet of connectedSets) {
-            if (pointDistanceToSegment(connectedSet[0], connectedSet[1], member.position) <= .5) {
-                handle(state, 'death', member)
+            if (pointDistanceToSegment(connectedSet[0].position, connectedSet[1].position, member.position) <= .5) {
+                handle(state, 'death', {killed: member, killers: connectedSet})
             }
         }
     }
@@ -65,10 +65,10 @@ function shrinkEnd(p1, p2, length, reduction) {
 }
 
 function shrinkSegment(p1, p2, reduction) {
-    let length = pointDistance(p1, p2)
-    let p1b = shrinkEnd(p1, p2, length, reduction / 2)
-    let p2b = shrinkEnd(p2, p1, length, reduction / 2)
-    return [p1b, p2b]
+    let length = pointDistance(p1.position, p2.position)
+    let p1b = shrinkEnd(p1.position, p2.position, length, reduction / 2)
+    let p2b = shrinkEnd(p2.position, p1.position, length, reduction / 2)
+    return [{id: p1.player, position: p1b}, {id: p2.player, position: p2b}]
 }
 
 

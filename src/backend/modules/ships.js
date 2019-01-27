@@ -80,7 +80,8 @@ addHandler('playerleft', (state, player) => {
 })
 
 
-addHandler('death', (state, ship) => {
+addHandler('death', (state, combatants) => {
+    let ship = combatants.killed
     let remaining = Object.entries(state.ships).filter((entry) => {
         return entry[0] !== ship.id
     })

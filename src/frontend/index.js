@@ -9,9 +9,10 @@ require('./bounds');
 require('./destroy');
 require('./music');
 require('./homeworld');
+require('./score')
 
 const {start} = require('skid/lib/load');
-start(true);
+start(false);
 
 const {silence} = require('skid/lib/event');
 silence(['message', 'update_physics', 'ship_updateall', 'send']);

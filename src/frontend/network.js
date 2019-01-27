@@ -9,7 +9,7 @@ addHandler('load', (state) => {
     window.socket = socket;
 
     socket.addEventListener('message', (event) => {
-        handle(state, 'message', event.data);
+        handle(state, 'message', JSON.parse(event.data));
     });
     socket.addEventListener('open', (event) => {
         handle(state, 'connect');
