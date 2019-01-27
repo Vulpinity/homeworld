@@ -1,4 +1,4 @@
-const {addHandler} = require('skid/lib/event');
+const {addHandler, handle} = require('skid/lib/event');
 const {handleInterval} = require('skid/lib/timer');
 const {linear} = require('skid/lib/tween');
 const {distanceXY} = require('skid/lib/vector2');
@@ -28,6 +28,7 @@ function updateLaser(state, shipA, shipB) {
         state.lasers[id] = laser;
 
         laser.scene = new LineAvatar(state.scene.world);
+        laser.scene.layer = 2;
         laser.scene.lineWidth = .1;
         laser.shipA = shipA;
         laser.shipB = shipB;
@@ -42,9 +43,13 @@ function updateLaser(state, shipA, shipB) {
     if (3 <= dist && dist <= MAX_LEN_LASER) {
         if (laser.scene.strokeStyle !== 'red') {
             created = true;
+            handle(state, 'laser_on');
         }
         laser.scene.strokeStyle = 'red';
     } else {
+        if (laser.scene.strokeStyle === 'red') {
+            handle(state, 'laser_off');
+        }
         laser.scene.strokeStyle = 'transparent';
         return;
     }

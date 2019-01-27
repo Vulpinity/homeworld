@@ -5,6 +5,7 @@ require('./viewport');
 require('./camera');
 require('./ship');
 require('./laser');
+require('./bounds');
 
 const {start} = require('skid/lib/load');
 start(true);

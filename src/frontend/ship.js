@@ -61,6 +61,7 @@ function updateShip(state, id, isPlayer, x, y, dx, dy, team) {
         state.ships[id] = ship;
 
         const body = new PieAvatar(state.scene.camera);
+        body.layer = 1;
         body.breadth.setTo(1);
         body.x.setTo(x);
         body.y.setTo(y);
