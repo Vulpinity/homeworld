@@ -29,7 +29,7 @@ addHandler('load resize', (state) => {
 });
 
 addHandler('update_physics', (state) => {
-    const ship = localShip(state);
+    const ship = state.localShip;
     if (!ship) return;
     if (state.scene.camera.x.dest === ship.x && state.scene.camera.y.dest === ship.y) return;
     state.scene.camera.x.modTo(ship.x, 1000, linear);

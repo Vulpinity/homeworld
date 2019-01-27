@@ -14,11 +14,6 @@ addHandler('load_done', (state) => {
     handleInterval(state, PHYSICS_INTERVAL, 'update_physics');
 });
 
-function localShip(state) {
-    return state.ships[state.playerId];
-}
-exports.localShip = localShip;
-
 addHandler('key', (state, event) => {
 
 });
@@ -36,12 +31,15 @@ addHandler('message', (state, data) => {
             let team = shipDetails[key].team;
             updateShip(state, id, player === state.playerId, positions.x, positions.y,
                 positions.dx, positions.dy, team)
+
+            if (player === state.playerId) {
+                state.localShip = state.ships[id];
+            }
         });
     } else if (message["type"] === "death") {
         let ship = state.ships[message['ship']]
         delete state.ships[message['ship']]
         ship.scene.remove()
-        console.log(state.ships)
     }
 });
 

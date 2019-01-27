@@ -62,7 +62,7 @@ addHandler('send', (state, data) => {
         for (let ws of state.connections) {
             try {
                 ws.send(JSON.stringify(data.msg))
-            } catch {
+            } catch (err) {
                 // Socket is closing. Ignore.
             }
         }
