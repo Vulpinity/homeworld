@@ -22,6 +22,16 @@ addHandler('ship_created', (state, ship) => {
     }
 });
 
+addHandler('ship_destroyed', (state, ship) => {
+    for (const key of Object.keys(state.lasers)) {
+        if (key.startsWith(ship.id) || key.endsWith(ship.id)) {
+            const laser = state.lasers[key];
+            laser.scene.remove();
+            delete state.lasers[key];
+        }
+    }
+})
+
 function updateLaser(state, shipA, shipB) {
     const id = `${shipA.id}_${shipB.id}`;
     let created = false;
