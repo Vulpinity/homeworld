@@ -4,7 +4,9 @@
   "description": "Defend your homeworld! A simple IO Game developed for the Global Game Jam 2019.",
   "main": "index.js",
   "scripts": {
-    "dev": "node ./watchbuild.js"
+    "dev": "node ./watchbuild.js",
+    "server": "node ./src/backend/server.js",
+    "build": "./build.sh"
   },
   "repository": {
     "type": "git",
