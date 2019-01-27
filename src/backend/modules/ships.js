@@ -1,5 +1,6 @@
 const uuidv4 = require('uuid/v4');
 const {addHandler, handle} = require('skid/lib/event')
+const {PHYSICS_INTERVAL} = require('../../constants')
 
 addHandler('load', (state) => {
     state.ships = {}
@@ -14,6 +15,7 @@ function makeShip(state, player) {
 exports.makeShip = makeShip
 
 addHandler('tick', (state) => {
+    handle(state, 'updatephysics', 'ships')
     handle(state, 'positionevents', 'ships')
     handle(state,'send', {msg: {type: 'positionUpdate', ships: state.ships}})
 })
@@ -29,6 +31,30 @@ addHandler('input_position', (state, data) => {
             return
         }
         state.ships[data.msg['id']].position = data.msg['position']
+    } catch (err) {
+        console.log("Couldn't update position!")
+        console.error(err)
+    }
+})
+
+addHandler('updatephysics', (state) => {
+    for (let ship of Object.values(state.ships)) {
+        ship.position.x += (ship.position.dx * (PHYSICS_INTERVAL / 1000))
+        ship.position.y += (ship.position.dy * (PHYSICS_INTERVAL / 1000))
+    }
+});
+
+addHandler('input_shipdirection', (state, data) => {
+    // This input is taken directly from the client. It is not validated. Normally, this would be insane, but this is a
+    // 'develop a game in 48 hours challenge' and we'll only play it a few times, likely.
+    try {
+        if (!state.ships[data.msg.id]) {
+            // Ship has been eliminated.
+            return
+        }
+        let ship = state.ships[data.msg.id]
+        ship.position.dx = data.msg.dx
+        ship.position.dy = data.msg.dy
     } catch (err) {
         console.log("Couldn't update position!")
         console.error(err)
