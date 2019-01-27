@@ -5,6 +5,7 @@ const KEYS = require('skid/lib/key'); // Holds keyboard value constants.
 const {PieAvatar} = require('skid/lib/scene/pie-avatar');
 const {Translation} = require('skid/lib/scene/translation');
 const {linear} = require('skid/lib/tween');
+const {distanceXY} = require('skid/lib/vector2');
 const {PHYSICS_INTERVAL, ACCELERATION_FACTOR, MAX_ACCELERATION} = require('../constants');
 require('skid/lib/input');
 
@@ -76,12 +77,21 @@ addHandler('update_physics', (state) => {
             state.localShip.dy += deltay
         }
     }
-    if (state.localShip.dy > MAX_ACCELERATION) {
-        state.localShip.dy = MAX_ACCELERATION
+
+    const magnitude = distanceXY(state.localShip.dx, state.localShip.dy, 0, 0);
+    if (magnitude > MAX_ACCELERATION) {
+        // normalize to unit vector
+        let newX = state.localShip.dx / magnitude;
+        let newY = state.localShip.dy / magnitude;
+
+        // scale to correct magnitude
+        newX *= MAX_ACCELERATION;
+        newY *= MAX_ACCELERATION;
+
+        state.localShip.dx = newX;
+        state.localShip.dy = newY;
     }
-    if (state.localShip.dx > MAX_ACCELERATION) {
-        state.localShip.dx = MAX_ACCELERATION
-    }
+
     handle(state, 'send', {
         type: 'shipdirection', dx: state.localShip.dx, dy: state.localShip.dy, id: state.localShip.id
     })
