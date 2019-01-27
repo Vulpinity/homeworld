@@ -11,7 +11,7 @@ addHandler('load', (state) => {
 
 addHandler('load_done', (state) => {
     handleInterval(state, 1000, 'ship_updateall');
-    handleInterval(state, PHYSICS_INTERVAL, 'updatedirection')
+    handleInterval(state, PHYSICS_INTERVAL, 'update_physics')
 });
 
 addHandler('key', (state, event) => {
@@ -41,7 +41,7 @@ addHandler('message', (state, data) => {
     }
 });
 
-addHandler('updatedirection', (state) => {
+addHandler('update_physics', (state) => {
     if (!state.localShip) {
         return
     }
