@@ -3,6 +3,7 @@ const {playerOfId} = require('./players')
 const {KILL_SCORE} = require('../../constants')
 
 addHandler('death', (state, combatants) => {
+    if (!combatants.killers) return;
     for (const killer of combatants.killers) {
         let player = playerOfId(state, killer.id)
         if (player === undefined) {

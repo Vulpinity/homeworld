@@ -6,6 +6,20 @@ addHandler('load', (state) => {
     state.ships = {}
 })
 
+addHandler('playerleft', (state, player) => {
+    const ship = shipOfPlayer(state, player);
+    if (!ship) return;
+    handle(state, 'death', {killed: ship});
+})
+
+function shipOfPlayer(state, player) {
+    for (const ship of Object.values(state.ships)) {
+        if (ship.player === player.id) {
+            return ship;
+        }
+    }
+}
+
 function makeShip(state, player) {
     let id = uuidv4()
     let ship = {team: player.team, player: player.id, id}
