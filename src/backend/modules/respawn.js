@@ -20,8 +20,8 @@ addHandler('newship', (state, ship) => {
     ship.position = teamPosition(ship.team);
 });
 
-addHandler('death', (state, ship) => {
-    handleLater(state, TIME_SPAWN, 'respawn', ship.player);
+addHandler('death', (state, combatants) => {
+    handleLater(state, TIME_SPAWN, 'respawn', combatants.killed.player);
 });
 
 addHandler('respawn', (state, playerId) => {

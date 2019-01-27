@@ -17,7 +17,7 @@ addHandler('load', (state) => {
 })
 
 addHandler('connection', (state, socket) => {
-    let player = {id: uuidv4(), team: nextTeam(state.players), socket}
+    let player = {id: uuidv4(), team: nextTeam(state.players), socket, score: 0}
     state.players.push(player)
     handle(state, 'send', {
         socket: socket,
@@ -42,4 +42,5 @@ function playerOfId(state, id) {
         if (player.id === id) return player;
     }
 }
+
 exports.playerOfId = playerOfId;

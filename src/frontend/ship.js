@@ -18,10 +18,10 @@ addHandler('load_done', (state) => {
 });
 
 
-addHandler('message', (state, data) => {
-    let message = JSON.parse(data);
+addHandler('message', (state, message) => {
     if (message["type"] === "assignment") {
         state.playerId = message["player"].id;
+        state.playerTeam = message['player'].team
     } else if (message["type"] === "positionUpdate") {
         let shipDetails = message["ships"];
         Object.keys(shipDetails).forEach(function (key) {
