@@ -3,6 +3,7 @@ const {handleInterval} = require('skid/lib/timer');
 const {linear} = require('skid/lib/tween');
 const {distanceXY} = require('skid/lib/vector2');
 const {loadAudio} = require('skid/lib/audio');
+const {RectAvatar} = require('skid/lib/scene/rect-avatar');
 const {LineAvatar} = require('./line-avatar');
 const {PHYSICS_INTERVAL, MAX_LEN_LASER} = require('../constants');
 
@@ -11,6 +12,43 @@ addHandler('load', (state) => {
 
     loadAudio(state, 'laser_off', {src: ['./assets/laser_off_0.ogg', './assets/laser_off_0.mp3']});
     loadAudio(state, 'laser_on', {src: ['./assets/laser_on_0.ogg', './assets/laser_on_0.mp3']});
+
+    handleInterval(state, 300, 'update_laserstuff');
+});
+
+const TIME_THINGY = 900;
+
+function makeThingy(state, x, y) {
+    const thingy = new RectAvatar(state.scene.world);
+    thingy.layer = 2;
+
+    thingy.fillStyle = 'rgba(200, 0, 0, .5)';
+    thingy.w.setTo(.65);
+    thingy.h.setTo(.65);
+    thingy.anchorX.setTo(.5);
+    thingy.anchorY.setTo(.5);
+
+    thingy.x.setTo(x);
+    thingy.y.setTo(y);
+
+    thingy.x.mod(.5 * (Math.random() - .5), TIME_THINGY, linear);
+    thingy.y.mod(.5 * (Math.random() - .5), TIME_THINGY, linear);
+
+    thingy.w.modTo(0, TIME_THINGY, linear);
+    thingy.h.modTo(0, TIME_THINGY, linear);
+
+    thingy.angle.modTo(1, TIME_THINGY, linear);
+
+    setTimeout(() => thingy.remove(), TIME_THINGY);
+}
+
+addHandler('update_laserstuff', (state) => {
+    for (const laser of Object.values(state.lasers)) {
+        makeThingy(state, laser.shipA.x, laser.shipA.y);
+        makeThingy(state, laser.shipB.x, laser.shipB.y);
+        makeThingy(state, laser.scene.x1.curr, laser.scene.y1.curr);
+        makeThingy(state, laser.scene.x2.curr, laser.scene.y2.curr);
+    }
 });
 
 addHandler('ship_created', (state, ship) => {

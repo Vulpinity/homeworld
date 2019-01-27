@@ -14,7 +14,7 @@ addHandler('load', (state) => {
 
 addHandler('load_done', (state) => {
     handleInterval(state, 1000, 'ship_updateall');
-    handleInterval(state, PHYSICS_INTERVAL, 'update_physics')
+    handleInterval(state, PHYSICS_INTERVAL, 'update_physics');
 });
 
 
