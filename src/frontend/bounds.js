@@ -34,8 +34,8 @@ addHandler('update_physics', (state) => {
             headingY *= dist - BOUNDS_RADIUS - .5;
 
             // multiply by boundary pressure
-            headingX *= 20;
-            headingY *= 20;
+            headingX *= 10;
+            headingY *= 10;
 
             ship.dx += headingX * (PHYSICS_INTERVAL / 1000);
             ship.dy += headingY * (PHYSICS_INTERVAL / 1000);

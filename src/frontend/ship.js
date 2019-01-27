@@ -5,7 +5,7 @@ const KEYS = require('skid/lib/key'); // Holds keyboard value constants.
 const {PieAvatar} = require('skid/lib/scene/pie-avatar');
 const {Translation} = require('skid/lib/scene/translation');
 const {linear} = require('skid/lib/tween');
-const {PHYSICS_INTERVAL, ACCELERATION_FACTOR, MAX_ACCELERATION, FRICTION_FACTOR} = require('../constants');
+const {PHYSICS_INTERVAL, ACCELERATION_FACTOR, MAX_ACCELERATION} = require('../constants');
 require('skid/lib/input');
 
 addHandler('load', (state) => {
@@ -60,14 +60,20 @@ addHandler('update_physics', (state) => {
     if (!state.localShip) {
         return
     }
-    // state.localShip.dx *=  1 - (FRICTION_FACTOR * (PHYSICS_INTERVAL / 1000))
-    // state.localShip.dy *=  1 - (FRICTION_FACTOR * (PHYSICS_INTERVAL / 1000))
     for (let mapping of MOVE_MAPPINGS) {
         let keys = mapping[0]
         let vector = mapping[1]
         if (keys.some((key)=>{return stateOf(key)})) {
-            state.localShip.dx += (vector.dx * (PHYSICS_INTERVAL / 1000))
-            state.localShip.dy += (vector.dy * (PHYSICS_INTERVAL / 1000))
+            let deltax = (vector.dx * (PHYSICS_INTERVAL / 1000))
+            let deltay = (vector.dy * (PHYSICS_INTERVAL / 1000))
+            if ((deltax < 0) ^ (state.localShip.dx < 0)) {
+                deltax *= 2
+            }
+            if ((deltay < 0) ^ (state.localShip.dy < 0)) {
+                deltay *= 2
+            }
+            state.localShip.dx += deltax
+            state.localShip.dy += deltay
         }
     }
     if (state.localShip.dy > MAX_ACCELERATION) {
