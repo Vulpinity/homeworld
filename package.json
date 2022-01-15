@@ -29,7 +29,7 @@
     "express-ws": "^4.0.0",
     "node-watch": "^0.6.0",
     "reconnecting-websocket": "^4.1.10",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.5",
     "skid": "0.0.29",
     "uuid": "^3.3.2"
   },
